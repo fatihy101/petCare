@@ -22,7 +22,7 @@ environment:
 
 
 dependencies:
-  get: ^4.2.5
+  get: 4.2.0
   flutter_secure_storage: ^4.2.0
   firebase_core: ^1.4.0
   flutter:
@@ -35,6 +35,8 @@ dependencies:
   google_sign_in: ^5.0.5
   font_awesome_flutter: ^9.1.0
   tab_indicator_styler: ^2.0.0-null-safety
+  day_night_time_picker: ^1.0.2
+  expandable: ^5.0.1
 
 dev_dependencies:
   flutter_test:

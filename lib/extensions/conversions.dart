@@ -7,4 +7,6 @@ extension conversions on TimeOfDay {
     DateTime now = DateTime.now();
     return DateTime(now.year, now.month, now.day, this.hour, this.minute);
   }
+
+  String get formattedString => "${this.hour}:${this.minute}";
 }

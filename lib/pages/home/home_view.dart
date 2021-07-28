@@ -11,24 +11,25 @@ class HomeView extends StatelessWidget {
   final HomeController _controller = Get.find();
 
   Tab createTab(String petName, bool isDog) => Tab(
-    child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(right: 8.0),
-            child:
-            FaIcon(isDog ? FontAwesomeIcons.dog  : FontAwesomeIcons.cat, color: Get.theme.backgroundColor),
-          ),
-          Text(
-            petName,
-            style: GoogleFonts.courgette(
-                color: Get.theme.backgroundColor,
-                fontWeight: FontWeight.w600,
-                fontSize: 18),
-          ),
-        ]),
-  );
+        child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(right: 8.0),
+                child: FaIcon(
+                    isDog ? FontAwesomeIcons.dog : FontAwesomeIcons.cat,
+                    color: Get.theme.backgroundColor),
+              ),
+              Text(
+                petName,
+                style: GoogleFonts.courgette(
+                    color: Get.theme.backgroundColor,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 18),
+              ),
+            ]),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -56,18 +57,13 @@ class HomeView extends StatelessWidget {
           bottom: TabBar(
             isScrollable: true,
             physics: BouncingScrollPhysics(),
-            tabs: [
-              createTab("Lisa", true),
-              createTab("Pisi", false)
-            ],
+            tabs: [createTab("Lisa", true), createTab("Pisi", false)],
             indicator: RectangularIndicator(
-              bottomLeftRadius: 60,
-              bottomRightRadius: 60,
-              topLeftRadius: 40,
-              topRightRadius: 40,
-
-              color: Colors.black.withOpacity(0.2)
-            ),
+                bottomLeftRadius: 60,
+                bottomRightRadius: 60,
+                topLeftRadius: 40,
+                topRightRadius: 40,
+                color: Colors.black.withOpacity(0.2)),
           ),
         ),
         floatingActionButton: FloatingActionButton(
@@ -75,7 +71,7 @@ class HomeView extends StatelessWidget {
             FontAwesomeIcons.paw,
             color: Colors.white70,
           ),
-          onPressed: () {},
+          onPressed: () => Get.toNamed("/add_pet"),
           backgroundColor: Get.theme.primaryColor,
           elevation: 5,
           splashColor: Get.theme.backgroundColor,
