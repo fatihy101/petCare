@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pet_care/pages/home/home_controller.dart';
 import 'package:pet_care/pages/login/login_view.dart';
+import 'package:pet_care/pages/pet_information/pet_information_view.dart';
 import 'package:tab_indicator_styler/tab_indicator_styler.dart';
 
 class HomeView extends StatelessWidget {
@@ -54,7 +55,7 @@ class HomeView extends StatelessWidget {
                 ),
                 onPressed: () => Get.bottomSheet(LoginView()))
           ],
-          bottom: TabBar(
+          bottom: _controller.isTabView() ? TabBar(
             isScrollable: true,
             physics: BouncingScrollPhysics(),
             tabs: [createTab("Lisa", true), createTab("Pisi", false)],
@@ -64,7 +65,7 @@ class HomeView extends StatelessWidget {
                 topLeftRadius: 40,
                 topRightRadius: 40,
                 color: Colors.black.withOpacity(0.2)),
-          ),
+          ) : null,
         ),
         floatingActionButton: FloatingActionButton(
           child: FaIcon(
@@ -76,9 +77,32 @@ class HomeView extends StatelessWidget {
           elevation: 5,
           splashColor: Get.theme.backgroundColor,
         ),
-        body: Center(
-          child: TabBarView(
-            children: [Icon(Icons.animation), Icon(Icons.animation)],
+        body: Obx(
+          () => Center(
+            child: _controller.isTabView()
+                ? TabBarView(
+                    children: _controller.tabViews,
+                  )
+                : (_controller.pets.length == 1
+                    ? PetInformationView(pet: _controller.pets[0])
+                    : Container(
+                        child: Expanded(
+                        child: RichText(
+                          text: TextSpan(children: [
+                            TextSpan(
+                                text: "Evcil hayvanınızı eklemek için ",
+                                style: Get.textTheme.bodyText2!
+                                    .copyWith(color: Colors.black)),
+                            WidgetSpan(
+                                child: FaIcon(FontAwesomeIcons.paw,
+                                    color: Get.theme.primaryColor)),
+                            TextSpan(
+                                text: "'ye tıklayınız.",
+                                style: Get.textTheme.bodyText2!
+                                    .copyWith(color: Colors.black)),
+                          ]),
+                        ),
+                      ))),
           ),
         ),
       ),

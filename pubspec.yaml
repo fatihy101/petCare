@@ -35,7 +35,7 @@ dependencies:
   google_sign_in: ^5.0.5
   font_awesome_flutter: ^9.1.0
   tab_indicator_styler: ^2.0.0-null-safety
-  day_night_time_picker: ^1.0.2
+  day_night_time_picker: ^1.0.3+1
   expandable: ^5.0.1
 
 dev_dependencies:
