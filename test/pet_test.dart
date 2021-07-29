@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:pet_care/models/activity_scheduler.dart';
+import 'package:pet_care/models/dog.dart';
 import 'package:pet_care/models/pet.dart';
 
 main() {
   group("hunger points", () {
-    Exception valueErr = Exception("Invalid value");
+    Exception valueErr = Exception("Invalidv alue");
     String desc1 = "Remaining hunger points for two values";
     String desc2 = "For one values";
     String desc3 = "for multiple";
 
     testBody(List<TimeOfDay> feedingTimes, String description) {
-      Pet pet = Pet(name: "Guinea Pig", feedingTimes: feedingTimes);
-      var remainingPoints = pet.remainingHungerPoints;
+      Pet pet = Pet(
+          name: "Guinea Pig",
+          feedingActivity: ActivityScheduler(scheduledTimes: feedingTimes));
+      var remainingPoints = pet.feedingActivity.remainingActivityPoints;
       print("$description, RHP: " + remainingPoints.toString());
       if (remainingPoints > 100 || remainingPoints < 0) throw valueErr;
     }
@@ -36,6 +40,34 @@ main() {
         TimeOfDay(hour: 7, minute: 2)
       ];
       testBody(feedingTimes, desc3);
+    });
+  });
+
+  group("Initialize and convert to json", () {
+    List<TimeOfDay> feedingTimes = [
+      TimeOfDay(hour: 11, minute: 0),
+      TimeOfDay(hour: 9, minute: 30)
+    ];
+
+    List<TimeOfDay> fillWaterTimes = [
+      TimeOfDay(hour: 15, minute: 20),
+      TimeOfDay(hour: 10, minute: 40)
+    ];
+    test("pet initialization", () {
+      Pet pet = Pet(name: "Test pet",
+          feedingActivity: ActivityScheduler(scheduledTimes: feedingTimes),
+          fillWaterActivity: ActivityScheduler(scheduledTimes: fillWaterTimes)
+      );
+      print("Pet json: " + pet.toJsonMap().toString());
+    });
+
+    test("Dog initialization", () {
+      Dog dog = Dog(name: "Test dog",
+        feedingActivity: ActivityScheduler(scheduledTimes: feedingTimes),
+        walkingActivity: ActivityScheduler(scheduledTimes: fillWaterTimes),
+        fillWaterActivity: ActivityScheduler(scheduledTimes: feedingTimes),
+      );
+      print("Dog json: " + dog.toJsonMap().toString());
     });
   });
 }

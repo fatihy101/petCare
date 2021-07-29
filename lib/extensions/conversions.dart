@@ -10,3 +10,12 @@ extension conversions on TimeOfDay {
 
   String get formattedString => "${this.hour}:${this.minute}";
 }
+
+extension mapConversion on List<TimeOfDay> {
+  List<Map<String, int>> toMap() {
+    List<Map<String, int>> returnList = [];
+    this.forEach((element) => returnList
+        .add(<String, int>{"hour": element.hour, "minute": element.minute}));
+    return returnList;
+  }
+}

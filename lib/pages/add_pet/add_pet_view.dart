@@ -97,10 +97,10 @@ class AddPetView extends StatelessWidget {
                   ),
             ),
             ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(primary: Get.theme.primaryColor),
+                style: ElevatedButton.styleFrom(primary: Get.theme.primaryColor, elevation: 30),
                 onPressed: () {},
                 icon: Icon(Icons.add_circle_outline),
-                label: Text("Ekle")),
+                label: Text("EKLE")),
           ],
         ));
   }
