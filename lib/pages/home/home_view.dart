@@ -6,10 +6,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:pet_care/pages/home/home_controller.dart';
 import 'package:pet_care/pages/login/login_view.dart';
 import 'package:pet_care/pages/pet_information/pet_information_view.dart';
+import 'package:pet_care/pages/user_profile/user_profile_view.dart';
+import 'package:pet_care/services/authentication.dart';
 import 'package:tab_indicator_styler/tab_indicator_styler.dart';
 
 class HomeView extends StatelessWidget {
   final HomeController _controller = Get.find();
+  final Authentication _authentication = Get.find();
 
   Tab createTab(String petName, bool isDog) => Tab(
         child: Row(
@@ -48,24 +51,40 @@ class HomeView extends StatelessWidget {
               onPressed: null),
           title: Text("Pet Care", style: GoogleFonts.pacifico(fontSize: 28)),
           actions: [
-            IconButton(
-                icon: Icon(
-                  CupertinoIcons.profile_circled,
-                  color: Colors.white70,
-                ),
-                onPressed: () => Get.bottomSheet(LoginView()))
+            Obx(() => !_authentication.isUserSignedIn.value
+                  ? IconButton(
+                      icon: Icon(CupertinoIcons.profile_circled,
+                          color: Colors.white70),
+                      onPressed: () => Get.bottomSheet(LoginView()))
+                  : Padding(
+                    padding: EdgeInsets.only(right: 8.0),
+                    child: InkWell(
+                        onTap: () => Get.dialog(Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: UserProfileView(),
+                        )),
+                        child: CircleAvatar(
+                          backgroundImage: NetworkImage(
+                              _authentication.currentUser?.photoURL ??
+                                  ""), // TODO find image placeholder
+                        ),
+                      ),
+                  ),
+            )
           ],
-          bottom: _controller.isTabView() ? TabBar(
-            isScrollable: true,
-            physics: BouncingScrollPhysics(),
-            tabs: [createTab("Lisa", true), createTab("Pisi", false)],
-            indicator: RectangularIndicator(
-                bottomLeftRadius: 60,
-                bottomRightRadius: 60,
-                topLeftRadius: 40,
-                topRightRadius: 40,
-                color: Colors.black.withOpacity(0.2)),
-          ) : null,
+          bottom: _controller.isTabView()
+              ? TabBar(
+                  isScrollable: true,
+                  physics: BouncingScrollPhysics(),
+                  tabs: [createTab("Lisa", true), createTab("Pisi", false)],
+                  indicator: RectangularIndicator(
+                      bottomLeftRadius: 60,
+                      bottomRightRadius: 60,
+                      topLeftRadius: 40,
+                      topRightRadius: 40,
+                      color: Colors.black.withOpacity(0.2)),
+                )
+              : null,
         ),
         floatingActionButton: FloatingActionButton(
           child: FaIcon(
@@ -86,7 +105,6 @@ class HomeView extends StatelessWidget {
                 : (_controller.pets.length == 1
                     ? PetInformationView(pet: _controller.pets[0])
                     : Container(
-                        child: Expanded(
                         child: RichText(
                           text: TextSpan(children: [
                             TextSpan(
@@ -101,8 +119,7 @@ class HomeView extends StatelessWidget {
                                 style: Get.textTheme.bodyText2!
                                     .copyWith(color: Colors.black)),
                           ]),
-                        ),
-                      ))),
+                        ))),
           ),
         ),
       ),

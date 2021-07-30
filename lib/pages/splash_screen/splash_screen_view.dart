@@ -40,7 +40,7 @@ class SplashScreenView extends StatelessWidget {
                     Obx(
                       () => Text(_controller.loadingText.value,
                           style: GoogleFonts.courgette(
-                              fontSize: 16, fontWeight: FontWeight.bold)),
+                              fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black)),
                     )
                   ],
                 ),
