@@ -2,17 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class BlockIconButton extends StatelessWidget {
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final Color color;
   final Widget icon;
-  final String text;
+  final String? text;
+  final Text? textWidget;
 
   const BlockIconButton(
       {Key? key,
-      required this.onPressed,
+      this.onPressed,
+      this.text,
       required this.color,
       required this.icon,
-      required this.text})
+      this.textWidget})
       : super(key: key);
 
   @override
@@ -26,10 +28,10 @@ class BlockIconButton extends StatelessWidget {
         minimumSize: MaterialStateProperty.all(Size(double.infinity, 45)),
       ),
       icon: icon,
-      label: Text(
-        text,
+      label: text != null ? Text(
+        text!,
         style: GoogleFonts.courgette(fontSize: 20, color: Colors.white),
-      ),
+      ): textWidget!,
     );
   }
 }

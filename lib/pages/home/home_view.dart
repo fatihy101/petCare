@@ -59,10 +59,7 @@ class HomeView extends StatelessWidget {
                   : Padding(
                     padding: EdgeInsets.only(right: 8.0),
                     child: InkWell(
-                        onTap: () => Get.dialog(Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: UserProfileView(),
-                        )),
+                        onTap: () => Get.bottomSheet(UserProfileView()),
                         child: CircleAvatar(
                           backgroundImage: NetworkImage(
                               _authentication.currentUser?.photoURL ??
