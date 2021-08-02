@@ -8,6 +8,7 @@ import 'package:pet_care/pages/login/login_view.dart';
 import 'package:pet_care/pages/pet_information/pet_information_view.dart';
 import 'package:pet_care/pages/user_profile/user_profile_view.dart';
 import 'package:pet_care/services/authentication.dart';
+import 'package:pet_care/widgets/custom_snackbar.dart';
 import 'package:tab_indicator_styler/tab_indicator_styler.dart';
 
 class HomeView extends StatelessWidget {
@@ -49,16 +50,26 @@ class HomeView extends StatelessWidget {
                 color: Colors.white70,
               ),
               onPressed: null),
-          title: Text("Pet Care", style: GoogleFonts.pacifico(fontSize: 28)),
+          title: Obx(() => InkWell(
+                onLongPress: _authentication.isUserSignedIn.value
+                    ? () {
+                        _authentication.signOut();
+                        CustomSnackBar.getSnackBar("Çıkış başarılı", "Easter-egg");
+                      }
+                    : null,
+                child:
+                    Text("Pet Care", style: GoogleFonts.pacifico(fontSize: 28))),
+          ),
           actions: [
-            Obx(() => !_authentication.isUserSignedIn.value
+            Obx(
+              () => !_authentication.isUserSignedIn.value
                   ? IconButton(
                       icon: Icon(CupertinoIcons.profile_circled,
                           color: Colors.white70),
                       onPressed: () => Get.bottomSheet(LoginView()))
                   : Padding(
-                    padding: EdgeInsets.only(right: 8.0),
-                    child: InkWell(
+                      padding: EdgeInsets.only(right: 8.0),
+                      child: InkWell(
                         onTap: () => Get.bottomSheet(UserProfileView()),
                         child: CircleAvatar(
                           backgroundImage: NetworkImage(
@@ -66,7 +77,7 @@ class HomeView extends StatelessWidget {
                                   ""), // TODO find image placeholder
                         ),
                       ),
-                  ),
+                    ),
             )
           ],
           bottom: _controller.isTabView()
@@ -103,20 +114,20 @@ class HomeView extends StatelessWidget {
                     ? PetInformationView(pet: _controller.pets[0])
                     : Container(
                         child: RichText(
-                          text: TextSpan(children: [
-                            TextSpan(
-                                text: "Evcil hayvanınızı eklemek için ",
-                                style: Get.textTheme.bodyText2!
-                                    .copyWith(color: Colors.black)),
-                            WidgetSpan(
-                                child: FaIcon(FontAwesomeIcons.paw,
-                                    color: Get.theme.primaryColor)),
-                            TextSpan(
-                                text: "'ye tıklayınız.",
-                                style: Get.textTheme.bodyText2!
-                                    .copyWith(color: Colors.black)),
-                          ]),
-                        ))),
+                        text: TextSpan(children: [
+                          TextSpan(
+                              text: "Evcil hayvanınızı eklemek için ",
+                              style: Get.textTheme.bodyText2!
+                                  .copyWith(color: Colors.black)),
+                          WidgetSpan(
+                              child: FaIcon(FontAwesomeIcons.paw,
+                                  color: Get.theme.primaryColor)),
+                          TextSpan(
+                              text: "'ye tıklayınız.",
+                              style: Get.textTheme.bodyText2!
+                                  .copyWith(color: Colors.black)),
+                        ]),
+                      ))),
           ),
         ),
       ),

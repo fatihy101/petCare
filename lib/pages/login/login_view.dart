@@ -33,7 +33,7 @@ class LoginView extends StatelessWidget {
                 },
                 onChanged: _controller.setSubmitOnChange,
                 style: TextStyle(color: Colors.black),
-                controller: _controller.emailController,
+                controller: _controller.emailCtrl,
                 cursorColor: Get.theme.primaryColor,
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
@@ -50,12 +50,12 @@ class LoginView extends StatelessWidget {
               TextFormField(
                 onChanged: _controller.setSubmitOnChange,
                 style: TextStyle(color: Colors.black),
-                controller: _controller.passwordController,
+                controller: _controller.passCtrl,
                 keyboardType: TextInputType.visiblePassword,
                 cursorColor: Get.theme.primaryColor,
                 validator: (value) {
-                  if (value!.length < 8)
-                    return "Parolanız 8 karakterden uzun olmalı.";
+                  if (value!.length < 6)
+                    return "Parolanız 6 karakterden uzun olmalı.";
                 },
                 obscureText: true,
                 decoration: InputDecoration(
@@ -82,10 +82,7 @@ class LoginView extends StatelessWidget {
               Obx(
                 () => BlockIconButton(
                   onPressed: _controller.submitEnabled.value
-                      ? () {
-                          _controller.submit();
-                          //Get.back();
-                        }
+                      ? () async => await _controller.submit()
                       : null,
                   color: _controller.submitEnabled.value
                       ? Colors.black

@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pet_care/widgets/custom_snackbar.dart';
@@ -28,6 +29,25 @@ class Authentication extends GetxController {
     } catch (e) {
       log(e.toString());
       // TODO handle error
+    }
+  }
+
+  login(String email, password) async {
+    try {
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
+      isUserSignedIn.value = true;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        print('No user found for that email.');
+        ScaffoldMessengerState().showSnackBar(
+            CustomSnackBar(text: "Bu e-postaya ait kullanıcı bulunamadı.")
+                as SnackBar);
+      } else if (e.code == 'wrong-password') {
+        print('Wrong password provided for that user.');
+        ScaffoldMessengerState().showSnackBar(
+            CustomSnackBar(text: "Yanlış parola girdiniz.") as SnackBar);
+      }
     }
   }
 
@@ -87,7 +107,8 @@ class Authentication extends GetxController {
             "Öneri: Büyük ve küçük harfler ve rakamları aynı anda kullanabilirsiniz.");
       } else if (e.code == 'email-already-in-use') {
         log('The account already exists for that email.');
-        CustomSnackBar.getSnackBar("Hata", "Girdiğiniz e-postayla hesabınız bulunuyor");
+        CustomSnackBar.getSnackBar(
+            "Hata", "Girdiğiniz e-postayla hesabınız bulunuyor");
       }
     } catch (e) {
       CustomSnackBar.getSnackBar("Hata", "Beklenmeyen bir hata oluştu!");
