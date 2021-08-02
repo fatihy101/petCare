@@ -8,12 +8,14 @@ class LoginController extends GetxController {
   TextEditingController passwordController = TextEditingController();
 
   setSubmitOnChange(value) {
-    if (emailController.text == "" || passwordController.text == "") submitEnabled.value = false;
-    else submitEnabled.value = true;
+    if (emailController.text == "" || passwordController.text == "")
+      submitEnabled.value = false;
+    else
+      submitEnabled.value = true;
   }
 
   submit() {
-    if(formKey.currentState!.validate()) {
+    if (formKey.currentState!.validate()) {
       print("validation");
     }
   }

@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:pet_care/widgets/custom_snackbar.dart';
 
 class Authentication extends GetxController {
   var _isInitialized = false.obs;
@@ -62,11 +63,11 @@ class Authentication extends GetxController {
           log("account-exists-with-different-credential",
               name: "Error on Google Sign in");
         } else if (e.code == 'invalid-credential') {
-          // Todo handle the error here
+          CustomSnackBar.getSnackBar("E-posta veya parolanız yanlış", "");
           log("invalid-credential", name: "Error on Google Sign in");
         }
       } catch (e) {
-        // Todo handle the error here
+        CustomSnackBar.getSnackBar("Hata", "Beklenmeyen bir hata oluştu");
         log(e.toString(), name: "Error on Google Sign in");
       }
     }
@@ -82,10 +83,14 @@ class Authentication extends GetxController {
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         log('The password provided is too weak.');
+        CustomSnackBar.getSnackBar("Girdiğiniz parola güvenli değil.",
+            "Öneri: Büyük ve küçük harfler ve rakamları aynı anda kullanabilirsiniz.");
       } else if (e.code == 'email-already-in-use') {
         log('The account already exists for that email.');
+        CustomSnackBar.getSnackBar("Hata", "Girdiğiniz e-postayla hesabınız bulunuyor");
       }
     } catch (e) {
+      CustomSnackBar.getSnackBar("Hata", "Beklenmeyen bir hata oluştu!");
       log(e.toString(), name: "Error on signUp");
     }
   }

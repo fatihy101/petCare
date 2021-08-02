@@ -117,7 +117,10 @@ class LoginView extends StatelessWidget {
                   ),
                   text: "Google ile Giriş Yap"),
               InkWell(
-                onTap: () => Get.toNamed("sign_up"),
+                onTap: () {
+                  Get.back();
+                  Get.toNamed("sign_up");
+                },
                 child: Container(
                     padding: EdgeInsets.only(top: 35),
                     child: Text(
