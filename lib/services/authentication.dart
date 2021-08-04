@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:pet_care/services/user_service.dart';
 import 'package:pet_care/widgets/custom_snackbar.dart';
 
 class Authentication extends GetxController {
@@ -12,12 +13,14 @@ class Authentication extends GetxController {
   var err = false.obs;
   var isUserSignedIn = false.obs;
   FirebaseAuth? _auth;
+  UserService userService = Get.find();
 
   @override
   void onInit() async {
     super.onInit();
     await initFirebase();
     if (_isInitialized.value && _auth == null) _auth = FirebaseAuth.instance;
+    if (currentUser != null) {}
   }
 
   User? get currentUser => FirebaseAuth.instance.currentUser;
@@ -34,9 +37,10 @@ class Authentication extends GetxController {
 
   login(String email, password) async {
     try {
-      await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password);
+      User? user = (await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password)).user;
       isUserSignedIn.value = true;
+      userService.setUser(user!);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         print('No user found for that email.');
@@ -76,8 +80,14 @@ class Authentication extends GetxController {
       );
 
       try {
-        await auth.signInWithCredential(credential);
-        isUserSignedIn.value = true;
+        User? user = (await auth.signInWithCredential(credential)).user;
+        if (user != null) {
+          isUserSignedIn.value = true;
+          userService.saveGUserInformation(user);
+          userService.setUser(user);
+        } else {
+          throw Exception("User is null. Something went wrong on getting user information. Stack trace: Google sign in");
+        }
       } on FirebaseAuthException catch (e) {
         if (e.code == 'account-exists-with-different-credential') {
           log("account-exists-with-different-credential",
@@ -90,16 +100,19 @@ class Authentication extends GetxController {
         CustomSnackBar.getSnackBar("Hata", "Beklenmeyen bir hata oluştu");
         log(e.toString(), name: "Error on Google Sign in");
       }
+    } else { // FixMe
+      userService.setUser(googleSignInAccount as User);
     }
   }
 
-  Future<void> signUpEmailPass(String email, password) async {
+  Future<User?> signUpEmailPass(String email, password) async {
     _initAuthIfNotExist();
     try {
       await Firebase.initializeApp();
-      await _auth!
+      UserCredential credentials = await _auth!
           .createUserWithEmailAndPassword(email: email, password: password);
       isUserSignedIn.value = true;
+      return credentials.user!;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         log('The password provided is too weak.');
@@ -114,6 +127,7 @@ class Authentication extends GetxController {
       CustomSnackBar.getSnackBar("Hata", "Beklenmeyen bir hata oluştu!");
       log(e.toString(), name: "Error on signUp");
     }
+    return null;
   }
 
   _initAuthIfNotExist() {

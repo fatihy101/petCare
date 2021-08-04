@@ -13,6 +13,9 @@ class SignUpView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) async {
+      await _controller.readPhotosFromAsset(context);
+    });
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Get.theme.primaryColor,
@@ -82,13 +85,15 @@ class SignUpView extends StatelessWidget {
                               children: [
                                 Padding(
                                   padding: EdgeInsets.all(8.0),
-                                  child: CircleAvatar(
-                                      child: Icon(
-                                          CupertinoIcons.profile_circled,
-                                          size: 100),
-                                      radius: 50,
-                                      backgroundColor: Colors.white,
-                                      foregroundColor: Colors.grey.shade700),
+                                  child: GestureDetector(
+                                    onTap: () => _controller.showAvatars(),
+                                    child: Obx(() => CircleAvatar(
+                                          backgroundImage: AssetImage(_controller.selectedAvatar.value),
+                                          radius: 50,
+                                          backgroundColor: Colors.white,
+                                          foregroundColor: Colors.grey.shade700),
+                                    ),
+                                  ),
                                 ),
                                 buildFormField(
                                     text: "E-posta",
@@ -144,7 +149,7 @@ class SignUpView extends StatelessWidget {
                                   child: BlockIconButton(
                                     color: Colors.white,
                                     onPressed: () async {
-                                      bool success = await _controller.submit();
+                                      bool success = await _controller.submitEmailPass();
                                       if (success) {
                                         Get.back();
                                       }

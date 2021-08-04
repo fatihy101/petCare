@@ -21,17 +21,19 @@ class UserProfileView extends StatelessWidget {
           child: Column(
             children: [
               CircleAvatar(
-                backgroundImage: NetworkImage(
-                    _authentication.currentUser?.photoURL ??
-                        ""), // TODO find image placeholder
                 radius: 50,
+                backgroundImage:
+                _authentication.userService.photoURL.value != ""
+                    ? NetworkImage(
+                    _authentication.userService.photoURL.value)
+                    : AssetImage(_authentication.userService.avatarName.value) as ImageProvider,
               ),
               Visibility(
                   child: ProfileRow(
                       headline: "Ad Soyad",
-                      text: _authentication.currentUser!.displayName!)),
+                      text: _authentication.userService.displayName.value)),
               ProfileRow(
-                  headline: "Email", text: _authentication.currentUser!.email!),
+                  headline: "Email", text: _authentication.userService.email.value),
               SizedBox(height: 10),
               BlockIconButton(
                   onPressed: () {

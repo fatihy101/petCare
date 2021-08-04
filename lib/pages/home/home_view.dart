@@ -15,26 +15,6 @@ class HomeView extends StatelessWidget {
   final HomeController _controller = Get.find();
   final Authentication _authentication = Get.find();
 
-  Tab createTab(String petName, bool isDog) => Tab(
-        child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(right: 8.0),
-                child: FaIcon(
-                    isDog ? FontAwesomeIcons.dog : FontAwesomeIcons.cat,
-                    color: Get.theme.backgroundColor),
-              ),
-              Text(
-                petName,
-                style: GoogleFonts.courgette(
-                    color: Get.theme.backgroundColor,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 18),
-              ),
-            ]),
-      );
 
   @override
   Widget build(BuildContext context) {
@@ -50,15 +30,17 @@ class HomeView extends StatelessWidget {
                 color: Colors.white70,
               ),
               onPressed: null),
-          title: Obx(() => InkWell(
+          title: Obx(
+            () => InkWell(
                 onLongPress: _authentication.isUserSignedIn.value
                     ? () {
                         _authentication.signOut();
-                        CustomSnackBar.getSnackBar("Çıkış başarılı", "Easter-egg");
+                        CustomSnackBar.getSnackBar(
+                            "Çıkış başarılı", "Easter-egg");
                       }
                     : null,
-                child:
-                    Text("Pet Care", style: GoogleFonts.pacifico(fontSize: 28))),
+                child: Text("Pet Care",
+                    style: GoogleFonts.pacifico(fontSize: 28))),
           ),
           actions: [
             Obx(
@@ -72,9 +54,11 @@ class HomeView extends StatelessWidget {
                       child: InkWell(
                         onTap: () => Get.bottomSheet(UserProfileView()),
                         child: CircleAvatar(
-                          backgroundImage: NetworkImage(
-                              _authentication.currentUser?.photoURL ??
-                                  ""), // TODO find image placeholder
+                          backgroundImage:
+                              _authentication.userService.photoURL.value != ""
+                                  ? NetworkImage(
+                                          _authentication.userService.photoURL.value)
+                                  : AssetImage(_authentication.userService.avatarName.value) as ImageProvider,
                         ),
                       ),
                     ),
@@ -84,7 +68,7 @@ class HomeView extends StatelessWidget {
               ? TabBar(
                   isScrollable: true,
                   physics: BouncingScrollPhysics(),
-                  tabs: [createTab("Lisa", true), createTab("Pisi", false)],
+                  tabs: _controller.tabs,
                   indicator: RectangularIndicator(
                       bottomLeftRadius: 60,
                       bottomRightRadius: 60,
