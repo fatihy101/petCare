@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -8,13 +9,14 @@ import 'package:pet_care/pages/login/login_view.dart';
 import 'package:pet_care/pages/pet_information/pet_information_view.dart';
 import 'package:pet_care/pages/user_profile/user_profile_view.dart';
 import 'package:pet_care/services/authentication.dart';
+import 'package:pet_care/services/user_service.dart';
 import 'package:pet_care/widgets/custom_snackbar.dart';
 import 'package:tab_indicator_styler/tab_indicator_styler.dart';
 
 class HomeView extends StatelessWidget {
   final HomeController _controller = Get.find();
   final Authentication _authentication = Get.find();
-
+  final UserService _userService = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -53,13 +55,19 @@ class HomeView extends StatelessWidget {
                       padding: EdgeInsets.only(right: 8.0),
                       child: InkWell(
                         onTap: () => Get.bottomSheet(UserProfileView()),
-                        child: CircleAvatar(
-                          backgroundImage:
-                              _authentication.userService.photoURL.value != ""
-                                  ? NetworkImage(
-                                          _authentication.userService.photoURL.value)
-                                  : AssetImage(_authentication.userService.avatarName.value) as ImageProvider,
-                        ),
+                        child: _userService.petOwner.value != null
+                            ? CircleAvatar(
+                                backgroundImage: _userService
+                                            .petOwner.value!.photoURL !=
+                                        null
+                                    ? NetworkImage(
+                                        _userService.petOwner.value!.photoURL!)
+                                    : AssetImage(_userService.petOwner.value!
+                                        .avatarName!) as ImageProvider,
+                              )
+                            : SpinKitCircle(
+                                color: Colors.white,
+                              ),
                       ),
                     ),
             )

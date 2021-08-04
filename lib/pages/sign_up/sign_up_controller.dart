@@ -30,7 +30,7 @@ class SignUpController extends GetxController {
       var user = await _authentication.signUpEmailPass(
           emailText, passwordCtrl.text.toString());
       if (user != null) {
-        await _userService.saveUserInformation(
+        await _userService.saveToStoreUser(
             emailText, nameSurnameCtrl.text, selectedAvatar.value, user.uid);
         return true;
       }

@@ -3,43 +3,29 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:pet_care/models/pet_owner.dart';
 import 'package:pet_care/services/fire_store_service.dart';
 
 class UserService extends GetxController {
-  RxString displayName = "".obs;
-  RxString photoURL = "".obs;
-  RxString avatarName = "".obs;
-  RxString email = "".obs;
-  RxString uid = "".obs;
-  var petIds = [].obs;
-  final userInfoCollection = "usersInformation";
+  static final userInfoCollection = "usersInformation";
+  Rx<PetOwner?> petOwner = null.obs;
 
   setUser(User user) async {
-    uid.value = user.uid;
     var userInformation =
-        await FireStoreServices.getByDocID(userInfoCollection, uid.value);
-    if(userInformation != null) {
-      petIds.value = userInformation["petIds"] ?? [];
-      displayName.value = userInformation["nameSurname"];
-      email.value = userInformation["email"];
-
-      if (user.photoURL == null) {
-        avatarName.value = userInformation["avatar"];
-      } else {
-        photoURL.value = user.photoURL!;
-      }
+        await FireStoreServices.getByDocID(userInfoCollection, user.uid);
+    if (userInformation != null) {
+      petOwner = PetOwner(
+        uid: user.uid,
+        displayName: userInformation["nameSurname"],
+        email: userInformation["email"],
+        petIDs: userInformation["petIds"] ?? [],
+        photoURL: user.photoURL ?? null,
+        avatarName: userInformation["avatar"] ?? null
+      ).obs;
+      log("Check ${petOwner.value.toString()}", name: "Set user");
     } else {
-
+      log("User information is null", name: "setUser error");
     }
-  }
-
-  resetUserValues() {
-    displayName = "".obs;
-    photoURL = "".obs;
-    email = "".obs;
-    uid = "".obs;
-    avatarName = "".obs;
-    petIds = [].obs;
   }
 
   Future saveGUserInformation(User user) async {
@@ -52,21 +38,20 @@ class UserService extends GetxController {
     }
   }
 
-  Future saveUserInformation(String email, nameSurname, avatarName, uid) async {
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
-    CollectionReference users = firestore.collection(userInfoCollection);
-
-    await users.doc(uid).set({
+  saveToStoreUser(String email, nameSurname, avatarName, uid) {
+    FireStoreServices.saveToStore(userInfoCollection, docID: uid, data: {
       "nameSurname": nameSurname,
       "email": email,
       "avatar": avatarName
-    }).then((value) {
+    }, thenCallback: (value) {
       log("User added", name: "UserService Success");
-      displayName.value = nameSurname;
-      this.email.value = email;
-      this.avatarName.value = avatarName;
-      this.uid = uid;
-    }).catchError((error) {
+      petOwner.value = PetOwner(
+          uid: uid,
+          displayName: nameSurname,
+          email: email,
+          avatarName: avatarName
+      );
+    }, errorCallback: (error) {
       log(error.toString(), name: "UserService error");
     });
   }

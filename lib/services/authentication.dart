@@ -13,14 +13,17 @@ class Authentication extends GetxController {
   var err = false.obs;
   var isUserSignedIn = false.obs;
   FirebaseAuth? _auth;
-  UserService userService = Get.find();
+  UserService _userService = Get.find();
 
   @override
   void onInit() async {
     super.onInit();
     await initFirebase();
     if (_isInitialized.value && _auth == null) _auth = FirebaseAuth.instance;
-    if (currentUser != null) {}
+    if (currentUser != null) {
+      _userService.setUser(currentUser!);
+      isUserSignedIn.value = true;
+    }
   }
 
   User? get currentUser => FirebaseAuth.instance.currentUser;
@@ -29,6 +32,7 @@ class Authentication extends GetxController {
     try {
       await FirebaseAuth.instance.signOut();
       isUserSignedIn.value = false;
+      _userService.petOwner = null.obs;
     } catch (e) {
       log(e.toString());
       // TODO handle error
@@ -40,7 +44,7 @@ class Authentication extends GetxController {
       User? user = (await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password)).user;
       isUserSignedIn.value = true;
-      userService.setUser(user!);
+      _userService.setUser(user!);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         print('No user found for that email.');
@@ -83,8 +87,8 @@ class Authentication extends GetxController {
         User? user = (await auth.signInWithCredential(credential)).user;
         if (user != null) {
           isUserSignedIn.value = true;
-          userService.saveGUserInformation(user);
-          userService.setUser(user);
+          _userService.saveGUserInformation(user);
+          _userService.setUser(user);
         } else {
           throw Exception("User is null. Something went wrong on getting user information. Stack trace: Google sign in");
         }
@@ -101,7 +105,7 @@ class Authentication extends GetxController {
         log(e.toString(), name: "Error on Google Sign in");
       }
     } else { // FixMe
-      userService.setUser(googleSignInAccount as User);
+      _userService.setUser(googleSignInAccount as User);
     }
   }
 
