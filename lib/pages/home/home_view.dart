@@ -9,6 +9,7 @@ import 'package:pet_care/pages/login/login_view.dart';
 import 'package:pet_care/pages/pet_information/pet_information_view.dart';
 import 'package:pet_care/pages/user_profile/user_profile_view.dart';
 import 'package:pet_care/services/authentication.dart';
+import 'package:pet_care/services/pet_service.dart';
 import 'package:pet_care/services/user_service.dart';
 import 'package:pet_care/widgets/custom_snackbar.dart';
 import 'package:tab_indicator_styler/tab_indicator_styler.dart';
@@ -17,6 +18,7 @@ class HomeView extends StatelessWidget {
   final HomeController _controller = Get.find();
   final Authentication _authentication = Get.find();
   final UserService _userService = Get.find();
+  final PetService _petService = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -102,8 +104,8 @@ class HomeView extends StatelessWidget {
                 ? TabBarView(
                     children: _controller.tabViews,
                   )
-                : (_controller.pets.length == 1
-                    ? PetInformationView(pet: _controller.pets[0])
+                : (_petService.pets.length == 1
+                    ? PetInformationView(pet: _petService.pets[0])
                     : Container(
                         child: RichText(
                         text: TextSpan(children: [

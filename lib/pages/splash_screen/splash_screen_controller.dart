@@ -1,6 +1,8 @@
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pet_care/services/authentication.dart';
+
 
 class SplashScreenController extends GetxController {
   Authentication _authentication = Get.find();
@@ -9,14 +11,15 @@ class SplashScreenController extends GetxController {
 
   Future<void> navigate() async {
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) async {
-      // ToDo check is there a "current user"
-      if (_authentication.err.value) {
-        // ToDo make the app offline
-        loadingText.value = "Bir hata olustu\nDaha sonra tekrar deneyin.";
-      } else {
-        Get.offAllNamed("/home");
-      }
-    });
+      await _authentication.setUserToService().then((value) {
+        if (_authentication.err.value) {
+          // ToDo make the app offline
+          loadingText.value = "Bir hata olustu\nDaha sonra tekrar deneyin.";
+        } else {
+          Get.offAllNamed("/home");
+        }
+      });
+      });
   }
 
   @override

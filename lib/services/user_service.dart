@@ -10,7 +10,7 @@ class UserService extends GetxController {
   static final userInfoCollection = "usersInformation";
   Rx<PetOwner?> petOwner = null.obs;
 
-  setUser(User user) async {
+  Future setUser(User user) async {
     var userInformation =
         await FireStoreServices.getByDocID(userInfoCollection, user.uid);
     if (userInformation != null) {
@@ -18,11 +18,10 @@ class UserService extends GetxController {
         uid: user.uid,
         displayName: userInformation["nameSurname"],
         email: userInformation["email"],
-        petIDs: userInformation["petIds"] ?? [],
+        petIDs: List.from(userInformation["petIDs"]),
         photoURL: user.photoURL ?? null,
         avatarName: userInformation["avatar"] ?? null
       ).obs;
-      log("Check ${petOwner.value.toString()}", name: "Set user");
     } else {
       log("User information is null", name: "setUser error");
     }

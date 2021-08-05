@@ -20,11 +20,16 @@ class Authentication extends GetxController {
     super.onInit();
     await initFirebase();
     if (_isInitialized.value && _auth == null) _auth = FirebaseAuth.instance;
-    if (currentUser != null) {
-      _userService.setUser(currentUser!);
+    await setUserToService();
+  }
+  Future setUserToService() async {
+    await Firebase.initializeApp();
+    if (currentUser != null || _userService.petOwner.value == null) {
+      await _userService.setUser(currentUser!);
       isUserSignedIn.value = true;
     }
   }
+
 
   User? get currentUser => FirebaseAuth.instance.currentUser;
 
@@ -35,7 +40,7 @@ class Authentication extends GetxController {
       _userService.petOwner = null.obs;
     } catch (e) {
       log(e.toString());
-      // TODO handle error
+      CustomSnackBar.getSnackBar("Hata", "Beklenmeyen bir hata oluştu!");
     }
   }
 

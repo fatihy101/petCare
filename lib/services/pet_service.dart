@@ -1,4 +1,6 @@
 
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:pet_care/models/pet.dart';
@@ -9,13 +11,16 @@ import 'package:pet_care/widgets/custom_snackbar.dart';
 class PetService extends GetxController {
   static const petCollectionName = "petsInformation";
   RxList<Pet> pets = List<Pet>.empty(growable: true).obs;
+  List<String> petIDs = [];
 
   Future getPetsByID() async {
-    // Get pets by documentID.
+    if(petIDs.isNotEmpty) {
+      // Get pets by documentID.
+      log(petIDs.toString(),name: "pet ids");
+      // Create pet objects.
 
-    // Create pet objects.
-
-    // Add to list.
+      // Add to list.
+    }
   }
 
   Future addPet(Map<String, dynamic> petData, String uid) async {
