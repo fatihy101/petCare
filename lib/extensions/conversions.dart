@@ -19,3 +19,7 @@ extension mapConversion on List<TimeOfDay> {
     return returnList;
   }
 }
+
+extension dateTimeStringFormat on DateTime {
+  withoutHourString() => "${this.day}/${this.month}/${this.year}";
+}

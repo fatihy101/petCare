@@ -1,18 +1,22 @@
 import 'activity_scheduler.dart';
 
 class Pet {
+  String? id;
   final String name;
   DateTime? birthdayDate;
+  String? breed;
   ActivityScheduler? fillWaterActivity;
   ActivityScheduler feedingActivity;
   String? species;
 
   Pet(
-      {required this.name,
+      {this.id,
+      required this.name,
       this.fillWaterActivity,
       required this.feedingActivity,
       this.birthdayDate,
-      this.species});
+      this.species,
+      this.breed});
 
   Map<String, dynamic> toJsonMap() => <String, dynamic>{
         "name": name,
@@ -21,5 +25,6 @@ class Pet {
         "fillWaterActivity":
             fillWaterActivity == null ? null : fillWaterActivity!.toJsonMap(),
         "species": species ?? null,
+        "breed": breed ?? null
       };
 }

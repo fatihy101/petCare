@@ -21,7 +21,7 @@ class ExpandableTimeSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+      padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
       child: Container(
         padding: EdgeInsets.all(8),
         decoration: BoxDecoration(

@@ -54,20 +54,41 @@ main() {
       TimeOfDay(hour: 10, minute: 40)
     ];
     test("pet initialization", () {
-      Pet pet = Pet(name: "Test pet",
+      Pet pet = Pet(
+          name: "Test pet",
           feedingActivity: ActivityScheduler(scheduledTimes: feedingTimes),
-          fillWaterActivity: ActivityScheduler(scheduledTimes: fillWaterTimes)
-      );
+          fillWaterActivity: ActivityScheduler(scheduledTimes: fillWaterTimes));
       print("Pet json: " + pet.toJsonMap().toString());
     });
 
     test("Dog initialization", () {
-      Dog dog = Dog(name: "Test dog",
+      Dog dog = Dog(
+        name: "Test dog",
         feedingActivity: ActivityScheduler(scheduledTimes: feedingTimes),
         walkingActivity: ActivityScheduler(scheduledTimes: fillWaterTimes),
         fillWaterActivity: ActivityScheduler(scheduledTimes: feedingTimes),
       );
       print("Dog json: " + dog.toJsonMap().toString());
     });
+  });
+
+  test("List<Pet> to list of String for ids", () {
+    List<TimeOfDay> feedingTimes = [
+      TimeOfDay(hour: 11, minute: 0),
+      TimeOfDay(hour: 9, minute: 30)
+    ];
+    List<Pet> pets = List.empty(growable: true);
+    pets.add(Pet(
+        id: "1a",
+        name: "Test",
+        feedingActivity: ActivityScheduler(scheduledTimes: feedingTimes)));
+    pets.add(Pet(
+        id: "3b",
+        name: "Test 2",
+        feedingActivity: ActivityScheduler(scheduledTimes: feedingTimes)));
+
+    List<String> ids = pets.map((e) => e.id!).toList();
+    print(ids.toString());
+    expect(ids, ["1a", "3b"]);
   });
 }

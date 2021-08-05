@@ -5,6 +5,7 @@ import 'package:pet_care/pages/add_pet/add_pet_view.dart';
 import 'package:pet_care/pages/home/home_bindings.dart';
 import 'package:pet_care/pages/login/login_view.dart';
 import 'package:pet_care/pages/sign_up/sign_up_view.dart';
+import 'package:pet_care/pages/splash_screen/splash_bindings.dart';
 import 'package:pet_care/pages/splash_screen/splash_screen_view.dart';
 import 'package:pet_care/pages/home/home_view.dart';
 
@@ -21,7 +22,7 @@ class App extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: "/",
       getPages: [
-        GetPage(name: "/", page: () => SplashScreenView()),
+        GetPage(name: "/", page: () => SplashScreenView(), binding: SplashBindings()),
         GetPage(name: "/login", page: () =>  LoginView()),
         GetPage(name: "/home", page: () => HomeView(), binding: HomeBindings()),
         GetPage(name: "/add_pet", page: () => AddPetView()),
