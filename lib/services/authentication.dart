@@ -12,6 +12,7 @@ class Authentication extends GetxController {
   var _isInitialized = false.obs;
   var err = false.obs;
   var isUserSignedIn = false.obs;
+  FirebaseApp? _firebaseApp;
   FirebaseAuth? _auth;
   UserService _userService = Get.find();
 
@@ -23,8 +24,8 @@ class Authentication extends GetxController {
     await setUserToService();
   }
   Future setUserToService() async {
-    await Firebase.initializeApp();
-    if (currentUser != null || _userService.petOwner.value == null) {
+    if (_firebaseApp == null) _firebaseApp = await Firebase.initializeApp();
+    if (currentUser != null && _userService.petOwner.value == null) {
       await _userService.setUser(currentUser!);
       isUserSignedIn.value = true;
     }
@@ -49,7 +50,7 @@ class Authentication extends GetxController {
       User? user = (await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password)).user;
       isUserSignedIn.value = true;
-      _userService.setUser(user!);
+      await _userService.setUser(user!);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         print('No user found for that email.');
@@ -117,7 +118,7 @@ class Authentication extends GetxController {
   Future<User?> signUpEmailPass(String email, password) async {
     _initAuthIfNotExist();
     try {
-      await Firebase.initializeApp();
+      if (_firebaseApp == null) _firebaseApp = await Firebase.initializeApp();
       UserCredential credentials = await _auth!
           .createUserWithEmailAndPassword(email: email, password: password);
       isUserSignedIn.value = true;
@@ -152,7 +153,7 @@ class Authentication extends GetxController {
   Future<bool> initFirebase() async {
     if (!_isInitialized.value) {
       try {
-        await Firebase.initializeApp();
+        if (_firebaseApp == null) _firebaseApp = await Firebase.initializeApp();
         log("Firebase initialized.", name: "Firebase Info");
         _isInitialized.value = true;
         err.value = false;

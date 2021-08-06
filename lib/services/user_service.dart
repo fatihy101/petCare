@@ -15,13 +15,15 @@ class UserService extends GetxController {
         await FireStoreServices.getByDocID(userInfoCollection, user.uid);
     if (userInformation != null) {
       petOwner = PetOwner(
-        uid: user.uid,
-        displayName: userInformation["nameSurname"],
-        email: userInformation["email"],
-        petIDs: List.from(userInformation["petIDs"]),
-        photoURL: user.photoURL ?? null,
-        avatarName: userInformation["avatar"] ?? null
-      ).obs;
+              uid: user.uid,
+              displayName: userInformation["nameSurname"],
+              email: userInformation["email"],
+              petIDs: userInformation["petIDs"] == null
+                  ? null
+                  : List.from(userInformation["petIDs"]),
+              photoURL: user.photoURL ?? null,
+              avatarName: userInformation["avatar"] ?? null)
+          .obs;
     } else {
       log("User information is null", name: "setUser error");
     }
@@ -48,8 +50,7 @@ class UserService extends GetxController {
           uid: uid,
           displayName: nameSurname,
           email: email,
-          avatarName: avatarName
-      );
+          avatarName: avatarName);
     }, errorCallback: (error) {
       log(error.toString(), name: "UserService error");
     });

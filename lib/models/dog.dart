@@ -10,30 +10,30 @@ class Dog extends Pet {
   ActivityScheduler feedingActivity;
   ActivityScheduler? walkingActivity;
 
-  Dog(
-      {this.id,
-      required this.name,
-      required this.feedingActivity,
-      this.breed,
-      this.birthdayDate,
-      this.fillWaterActivity,
-      this.walkingActivity})
+  Dog({this.id,
+    required this.name,
+    required this.feedingActivity,
+    this.breed,
+    this.birthdayDate,
+    this.fillWaterActivity,
+    this.walkingActivity})
       : super(
-            id: id,
-            name: name,
-            feedingActivity: feedingActivity,
-            birthdayDate: birthdayDate,
-            fillWaterActivity: fillWaterActivity,
-            species: "Dog",
-            breed: breed);
+      id: id,
+      name: name,
+      feedingActivity: feedingActivity,
+      birthdayDate: birthdayDate,
+      fillWaterActivity: fillWaterActivity,
+      species: "Dog",
+      breed: breed);
 
   @override
   Map<String, dynamic> toJsonMap() {
     Map<String, dynamic> inheritedMap = super.toJsonMap();
     inheritedMap.addAll(<String, dynamic>{
       "walkingActivity":
-          walkingActivity == null ? null : walkingActivity!.toJsonMap(),
+      walkingActivity == null ? null : walkingActivity!.toJsonMap(),
     });
     return inheritedMap;
   }
+
 }

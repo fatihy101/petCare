@@ -8,7 +8,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pet_care/services/pet_service.dart';
 import 'package:pet_care/services/user_service.dart';
-import 'dart:developer';
 
 class HomeController extends GetxController {
   RxList<Tab> tabs = List<Tab>.empty(growable: true).obs;

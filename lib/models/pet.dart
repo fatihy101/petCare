@@ -1,4 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'activity_scheduler.dart';
+import 'bird.dart';
+import 'cat.dart';
+import 'dog.dart';
 
 class Pet {
   String? id;
@@ -27,4 +32,69 @@ class Pet {
         "species": species ?? null,
         "breed": breed ?? null
       };
+
+  Pet.fromJson(Map<String, dynamic> data)
+      : id = data["id"],
+        name = data["name"],
+        feedingActivity = ActivityScheduler.fromJson(data, "feedingActivity"),
+        breed = data["breed"] ?? null,
+        birthdayDate = data["birthdayDate"] ?? null,
+        fillWaterActivity = data["fillWaterActivity"] == null
+            ? null
+            : ActivityScheduler.fromJson(data, "fillWaterActivity");
+
+  static Pet createPetFromJson(Map<String, dynamic> data) {
+    switch (data["species"]) {
+      case "Dog":
+        return Dog(
+            id: data["id"],
+            name: data["name"],
+            feedingActivity:
+                ActivityScheduler.fromJson(data, "feedingActivity"),
+            breed: data["breed"] ?? null,
+            birthdayDate: data["birthdayDate"] == null
+                ? null
+                : (data["birthdayDate"] as Timestamp).toDate(),
+            fillWaterActivity: data["fillWaterActivity"] == null
+                ? null
+                : ActivityScheduler.fromJson(data, "fillWaterActivity"),
+            walkingActivity: data["walkingActivity"] == null
+                ? null
+                : ActivityScheduler.fromJson(data, "walkingActivity"));
+      case "Cat":
+        return Cat(
+            id: data["id"],
+            name: data["name"],
+            feedingActivity:
+                ActivityScheduler.fromJson(data, "feedingActivity"),
+            breed: data["breed"] ?? null,
+            birthdayDate: data["birthdayDate"] ?? null,
+            fillWaterActivity: data["fillWaterActivity"] == null
+                ? null
+                : ActivityScheduler.fromJson(data, "fillWaterActivity"));
+      case "Bird":
+        return Bird(
+            id: data["id"],
+            name: data["name"],
+            feedingActivity:
+                ActivityScheduler.fromJson(data, "feedingActivity"),
+            breed: data["breed"] ?? null,
+            birthdayDate: data["birthdayDate"] ?? null,
+            fillWaterActivity: data["fillWaterActivity"] == null
+                ? null
+                : ActivityScheduler.fromJson(data, "fillWaterActivity"));
+      default:
+        return Pet(
+            id: data["id"],
+            name: data["name"],
+            feedingActivity:
+                ActivityScheduler.fromJson(data, "feedingActivity"),
+            breed: data["breed"] ?? null,
+            species: data["species"],
+            birthdayDate: data["birthdayDate"] ?? null,
+            fillWaterActivity: data["fillWaterActivity"] == null
+                ? null
+                : ActivityScheduler.fromJson(data, "fillWaterActivity"));
+    }
+  }
 }

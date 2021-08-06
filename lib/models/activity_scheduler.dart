@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_care/extensions/index.dart';
 
@@ -10,11 +11,23 @@ class ActivityScheduler {
     initPreviousAndNext();
   }
 
-  Map<String, dynamic> toJsonMap() => <String, dynamic> {
-    "scheduledTimes": scheduledTimes.toMap(),
-    "previousTime": previousTime == null ? null : previousTime!.toLocal(),
-    "nextTime": nextTime == null ? null : nextTime!.toLocal()
-  };
+  Map<String, dynamic> toJsonMap() => <String, dynamic>{
+        "scheduledTimes": scheduledTimes.toMap(),
+        "previousTime": previousTime == null ? null : previousTime!.toLocal(),
+        "nextTime": nextTime == null ? null : nextTime!.toLocal()
+      };
+
+  ActivityScheduler.fromJson(Map<String, dynamic> json, String activityName)
+      : nextTime = (json[activityName]["nextTime"] as Timestamp).toDate(),
+        previousTime = (json[activityName]["previousTime"] as Timestamp).toDate(),
+        scheduledTimes = listMapToTimeOfDay(json[activityName]["scheduledTimes"] as List<dynamic>);
+
+  static List<TimeOfDay> listMapToTimeOfDay(List<dynamic> mapList) {
+    List<TimeOfDay> returnList = [];
+    mapList.forEach((element) => returnList.add(TimeOfDay(
+        hour: element["hour"] as int, minute: element["minute"] as int)));
+    return returnList;
+  }
 
   double get remainingActivityPoints {
     var now = DateTime.now();
@@ -30,11 +43,13 @@ class ActivityScheduler {
     if (scheduledTimes.length > 1) {
       scheduledTimes.forEach((element) {
         if (element.toMinute() > now.toMinute()) {
-          if(nextTime == null || nextTime!.compareTo(element.toDateTime()) > 0) {
+          if (nextTime == null ||
+              nextTime!.compareTo(element.toDateTime()) > 0) {
             nextTime = element.toDateTime();
           }
         } else {
-          if(previousTime == null || previousTime!.compareTo(element.toDateTime()) < 0) {
+          if (previousTime == null ||
+              previousTime!.compareTo(element.toDateTime()) < 0) {
             previousTime = element.toDateTime();
           }
         }

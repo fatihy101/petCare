@@ -18,6 +18,7 @@ extension mapConversion on List<TimeOfDay> {
         .add(<String, int>{"hour": element.hour, "minute": element.minute}));
     return returnList;
   }
+
 }
 
 extension dateTimeStringFormat on DateTime {

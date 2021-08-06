@@ -1,4 +1,3 @@
-
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,12 +13,21 @@ class PetService extends GetxController {
   List<String> petIDs = [];
 
   Future getPetsByID() async {
-    if(petIDs.isNotEmpty) {
+    if (petIDs.isNotEmpty) {
       // Get pets by documentID.
-      log(petIDs.toString(),name: "pet ids");
-      // Create pet objects.
-
-      // Add to list.
+      log(petIDs.toString(), name: "pet ids");
+      for (String id in petIDs) {
+        // TODO make it real time fetching
+        var data = await FireStoreServices.getByDocID(petCollectionName, id);
+        if (data != null) {
+          // Create pet objects.
+          Pet pet = Pet.createPetFromJson(data);
+          // Add to list.
+          pets.add(pet);
+        } else {
+          log("Problem occurred while getting pet details");
+        }
+      }
     }
   }
 
@@ -38,11 +46,10 @@ class PetService extends GetxController {
           docID: uid,
           data: {"petIDs": newIds});
       Get.back();
-      CustomSnackBar.getSnackBar(
-          "Başarılı!", "Evcil hayvanınız eklendi");
-      if(!success) {
-        CustomSnackBar.getSnackBar(
-            "Evcil hayvanı eklerken hata oluştu", "Daha sonra tekrar deneyiniz.");
+      CustomSnackBar.getSnackBar("Başarılı!", "Evcil hayvanınız eklendi");
+      if (!success) {
+        CustomSnackBar.getSnackBar("Evcil hayvanı eklerken hata oluştu",
+            "Daha sonra tekrar deneyiniz.");
       }
     }
   }
