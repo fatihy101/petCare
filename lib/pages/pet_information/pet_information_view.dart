@@ -27,7 +27,6 @@ class _PetInformationViewState extends State<PetInformationView> {
 
   Widget activityView(ActivityScheduler activity, String text, Color color) =>
       InkWell(
-        onTap: activity,
         child: Container(
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(

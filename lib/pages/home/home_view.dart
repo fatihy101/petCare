@@ -4,6 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pet_care/pages/find_vet/find_vet_view.dart';
 import 'package:pet_care/pages/home/home_controller.dart';
 import 'package:pet_care/pages/login/login_view.dart';
 import 'package:pet_care/pages/pet_information/pet_information_view.dart';
@@ -12,6 +13,7 @@ import 'package:pet_care/services/authentication.dart';
 import 'package:pet_care/services/pet_service.dart';
 import 'package:pet_care/services/user_service.dart';
 import 'package:pet_care/widgets/custom_snackbar.dart';
+import 'package:pet_care/widgets/widgets.dart';
 import 'package:tab_indicator_styler/tab_indicator_styler.dart';
 
 class HomeView extends StatelessWidget {
@@ -25,16 +27,30 @@ class HomeView extends StatelessWidget {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+        drawer: Drawer(
+          child: SafeArea(
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(20.0),
+                  child: BlockIconButton(
+                    color: Get.theme.primaryColor,
+                    icon: Icon(CupertinoIcons.map_pin_ellipse, color: Colors.white70),
+                    text: "Yakındaki Veterinerler",
+                    onPressed: () {
+                      Get.back();
+                      Get.to(FindVetView());
+                    },
+                  ),
+                )
+              ]
+            ),
+          ),
+        ),
         appBar: AppBar(
           elevation: 0,
           centerTitle: true,
-          leading: IconButton(
-              icon: Icon(
-                Icons.menu,
-                color: Colors.white70,
-              ),
-              onPressed: null),
-          title: Obx(
+           title: Obx(
             () => InkWell(
                 onLongPress: _authentication.isUserSignedIn.value
                     ? () {
