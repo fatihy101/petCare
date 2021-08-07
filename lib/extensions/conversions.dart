@@ -18,9 +18,29 @@ extension mapConversion on List<TimeOfDay> {
         .add(<String, int>{"hour": element.hour, "minute": element.minute}));
     return returnList;
   }
+}
 
+String getMonthName(int month) {
+  List<String> months = [
+    "Ocak",
+    "Şubat",
+    "Mart",
+    "Nisan",
+    "Mayıs",
+    "Haziran",
+    "Temmuz",
+    "Ağustos",
+    "Eylül",
+    "Ekim",
+    "Kasım",
+    "Aralık"
+  ];
+  return months[month - 1];
 }
 
 extension dateTimeStringFormat on DateTime {
   withoutHourString() => "${this.day}/${this.month}/${this.year}";
+
+  withDayAndHour() =>
+      "${this.day} ${getMonthName(this.month)} ${this.hour}:${this.minute}";
 }

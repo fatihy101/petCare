@@ -37,6 +37,7 @@ dependencies:
   tab_indicator_styler: ^2.0.0-null-safety
   day_night_time_picker: ^1.0.3+1
   expandable: ^5.0.1
+  percent_indicator: ^3.0.1
 
 dev_dependencies:
   flutter_test:
